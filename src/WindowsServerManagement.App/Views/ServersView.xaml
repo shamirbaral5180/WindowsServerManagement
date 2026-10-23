@@ -28,8 +28,8 @@
         <Grid Grid.Row="1" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="300" MinWidth="250" MaxWidth="480" />
             </Grid.ColumnDefinitions>
 
             <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
@@ -74,6 +74,10 @@
                     </Border>
                 </Grid>
             </Border>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Background="Transparent" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
+                            Cursor="SizeWE" />
 
             <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
                     BorderThickness="1" CornerRadius="2">

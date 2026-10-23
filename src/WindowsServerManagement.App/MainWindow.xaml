@@ -113,7 +113,11 @@
             </Grid>
         </Border>
 
-        <Border Grid.Column="1" Background="{DynamicResource TitleBarBrush}"
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Background="{DynamicResource DividerBrush}" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
+                        Cursor="SizeWE" />
+
+        <Border Grid.Column="2" Background="{DynamicResource TitleBarBrush}"
                 BorderBrush="{DynamicResource DividerBrush}" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -132,6 +136,10 @@
                 <Border Grid.Column="1" Background="Transparent" MouseLeftButtonDown="TitleArea_MouseLeftButtonDown" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                    <Button x:Name="FullScreenButton" Style="{StaticResource IconButton}" ToolTip="Full screen (F11)"
+                            Width="30" Height="30" MinHeight="30" Click="FullScreen_Click" Margin="0,0,2,0">
+                        <TextBlock x:Name="FullScreenGlyph" Text="&#xE740;" FontFamily="Segoe MDL2 Assets" FontSize="11" />
+                    </Button>
                     <Button Style="{StaticResource IconButton}" Content="{Binding ThemeGlyph}" ToolTip="{Binding ThemeToolTip}"
                             Command="{Binding ToggleThemeCommand}" Margin="0,0,4,0" Width="30" Height="30" MinHeight="30" />
                     <Border Width="1" Height="20" Background="{DynamicResource DividerBrush}" Margin="2,0,6,0" />
@@ -147,7 +155,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="2">
             <ContentControl Content="{Binding CurrentViewModel}" />
         </Grid>
     </Grid>

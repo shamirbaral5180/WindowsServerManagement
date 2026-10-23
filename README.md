@@ -2,7 +2,7 @@
 
 A Windows desktop application for connecting to multiple remote Windows Servers over SSH and creating and managing IIS websites on the selected server.
 
-The UI is an IIS-style management console with a Connections sidebar, server tree, site table, and Actions pane. The light theme is the default; dark mode is also available.
+The UI is an IIS-style management console with a Connections sidebar, server tree, site table, and Actions pane. The light theme uses soft blue, green, teal, purple, and amber accents. Dark mode is also available. The sidebar and Actions panes are resizable, and F11 or the toolbar button toggles full-screen mode.
 
 - **Framework:** C# 13, .NET 10 WPF, MVVM
 - **UI:** CommunityToolkit.Mvvm, custom WPF styles and resources

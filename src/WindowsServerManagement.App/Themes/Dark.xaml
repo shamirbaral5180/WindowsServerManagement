@@ -52,6 +52,18 @@
     <SolidColorBrush x:Key="IconTileBrush" Color="#162E49" />
     <SolidColorBrush x:Key="DisabledTextBrush" Color="#5F7086" />
 
+    <SolidColorBrush x:Key="StatBlueBackgroundBrush" Color="#10263E" />
+    <SolidColorBrush x:Key="StatBlueBorderBrush" Color="#28527D" />
+    <SolidColorBrush x:Key="StatGreenBackgroundBrush" Color="#122B1D" />
+    <SolidColorBrush x:Key="StatGreenBorderBrush" Color="#245437" />
+    <SolidColorBrush x:Key="StatTealBackgroundBrush" Color="#102C2D" />
+    <SolidColorBrush x:Key="StatTealBorderBrush" Color="#235457" />
+    <SolidColorBrush x:Key="StatPurpleBackgroundBrush" Color="#211B36" />
+    <SolidColorBrush x:Key="StatPurpleBorderBrush" Color="#45386C" />
+    <SolidColorBrush x:Key="StatAmberBackgroundBrush" Color="#2D2615" />
+    <SolidColorBrush x:Key="StatAmberBorderBrush" Color="#564A28" />
+    <SolidColorBrush x:Key="TealBrush" Color="#5CD6DC" />
+    <SolidColorBrush x:Key="PurpleBrush" Color="#B3A0F2" />
     <LinearGradientBrush x:Key="BrandGradientBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="#2B8CF0" Offset="0" />
         <GradientStop Color="#1DB8A8" Offset="1" />
