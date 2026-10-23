@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:conv="clr-namespace:WindowsServerManagement.App.Converters"
-        Title="Server Manager" Width="1280" Height="780" MinWidth="1080" MinHeight="640" WindowState="Maximized"
+        Title="Server Manager" Icon="/Assets/AppIcon.ico" Width="1280" Height="780" MinWidth="1080" MinHeight="640" WindowState="Maximized"
         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
         Background="{DynamicResource WindowBackgroundBrush}" UseLayoutRounding="True"
         SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display">
@@ -42,10 +42,7 @@
                         <ColumnDefinition Width="32" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border Width="30" Height="30" CornerRadius="3" Background="{DynamicResource BrandGradientBrush}">
-                        <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="White"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Image Source="/Assets/AppIcon.png" Width="30" Height="30" Stretch="Uniform" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="9,0,0,0">
                         <TextBlock Text="Server Manager" FontSize="13" FontWeight="SemiBold" />
                         <TextBlock Text="Windows &amp; IIS management" FontSize="9.5" Foreground="{DynamicResource TextTertiaryBrush}" />

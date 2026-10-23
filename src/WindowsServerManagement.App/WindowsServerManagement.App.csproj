@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Resource Include="Assets\AppIcon.ico" />
+    <Resource Include="Assets\AppIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WindowsServerManagement.Core\WindowsServerManagement.Core.csproj" />
     <ProjectReference Include="..\WindowsServerManagement.Infrastructure\WindowsServerManagement.Infrastructure.csproj" />
   </ItemGroup>
@@ -18,7 +23,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>
