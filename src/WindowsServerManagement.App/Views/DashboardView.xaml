@@ -1,0 +1,168 @@
+<UserControl x:Class="WindowsServerManagement.App.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:WindowsServerManagement.App.Converters">
+    <UserControl.Resources>
+        <conv:ActivityStatusToBrushConverter x:Key="StatusBrush" />
+        <conv:ActivityStatusToBackgroundConverter x:Key="StatusBackground" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30,24,30,34">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Dashboard" Style="{StaticResource PageTitleText}" />
+                    <TextBlock Text="Servers, connections, and IIS websites at a glance." Style="{StaticResource PageSubtitleText}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}" Margin="0,0,8,0" />
+                    <Button Content="+  Add server" Style="{StaticResource PrimaryButton}" Command="{Binding GoToServersCommand}" />
+                </StackPanel>
+            </Grid>
+
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0" Padding="14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Quick actions" Style="{StaticResource FieldLabelText}" VerticalAlignment="Center"
+                               Margin="4,0,18,0" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Connect a server" Command="{Binding GoToServersCommand}" Margin="0,0,8,0" />
+                        <Button Content="Create IIS website" Command="{Binding CreateWebsiteCommand}" Margin="0,0,8,0" />
+                        <Button Content="View activity" Command="{Binding ViewLogsCommand}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <UniformGrid Rows="1" Columns="5" Margin="0,18,0,0">
+                <Border Style="{StaticResource Card}" Margin="0,0,10,0" BorderBrush="{DynamicResource AccentBorderBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{DynamicResource AccentBrush}" Margin="0,7,10,0" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding TotalServers}" FontSize="24" FontWeight="SemiBold" />
+                                <TextBlock Text="Servers" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,10,0" BorderBrush="{DynamicResource SuccessBorderBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE703;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{DynamicResource SuccessBrush}" Margin="0,7,10,0" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding ConnectedServers}" FontSize="24" FontWeight="SemiBold" />
+                                <TextBlock Text="Connected" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,10,0" BorderBrush="{DynamicResource AccentBorderBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{DynamicResource AccentBrush}" Margin="0,7,10,0" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding TotalWebsites}" FontSize="24" FontWeight="SemiBold" />
+                                <TextBlock Text="IIS websites" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,10,0" BorderBrush="{DynamicResource SuccessBorderBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{DynamicResource SuccessBrush}" Margin="0,7,10,0" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding RunningWebsites}" FontSize="24" FontWeight="SemiBold" />
+                                <TextBlock Text="Running" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" BorderBrush="{DynamicResource WarningBorderBrush}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE71A;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{DynamicResource WarningBrush}" Margin="0,7,10,0" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding StoppedWebsites}" FontSize="24" FontWeight="SemiBold" />
+                                <TextBlock Text="Stopped" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Recent activity" Style="{StaticResource SectionTitleText}" />
+                            <TextBlock Text="Latest operations across your server profiles." Style="{StaticResource MutedText}"
+                                       Margin="0,3,0,0" />
+                        </StackPanel>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Content="View all"
+                                Style="{StaticResource LinkButton}" Command="{Binding ViewLogsCommand}" />
+                    </Grid>
+
+                    <Border Grid.Row="1" Margin="0,14,0,0" Background="{DynamicResource SurfaceAltBrush}" CornerRadius="8"
+                            Padding="24" Visibility="{Binding HasNoRecentOperations, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="No activity yet" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                            <TextBlock Text="Connect to a server or create an IIS website to see operations here."
+                                       Style="{StaticResource MutedText}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <ItemsControl Grid.Row="1" Margin="0,8,0,0" ItemsSource="{Binding RecentOperations}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="138" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Width="8" Height="8" Fill="{Binding Status, Converter={StaticResource StatusBrush}}"
+                                             VerticalAlignment="Top" Margin="1,6,0,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding TimestampText}" FontSize="11"
+                                               Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0" />
+                                    <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                                        <TextBlock Text="{Binding Operation}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding ServerName}" Style="{StaticResource HelpText}" />
+                                        <TextBlock Text="{Binding Message}" Style="{StaticResource MutedText}" Margin="0,2,0,0"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Border Grid.Column="3" Style="{StaticResource StatusPill}" VerticalAlignment="Top"
+                                            Background="{Binding Status, Converter={StaticResource StatusBackground}}">
+                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{Binding Status, Converter={StaticResource StatusBrush}}" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <TextBlock Text="{Binding LastUpdatedText}" Style="{StaticResource HelpText}" HorizontalAlignment="Right"
+                       Margin="0,12,4,0" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

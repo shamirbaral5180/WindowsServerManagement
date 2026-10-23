@@ -1,0 +1,192 @@
+<UserControl x:Class="WindowsServerManagement.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:WindowsServerManagement.App.Converters">
+    <UserControl.Resources>
+        <conv:StringToVisibilityConverter x:Key="StringToVisibility" />
+        <conv:ThemeModeDisplayConverter x:Key="ThemeDisplay" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30,24,30,34" MaxWidth="1040" HorizontalAlignment="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Settings" Style="{StaticResource PageTitleText}" />
+                    <TextBlock Text="Configure defaults applied to new websites, connection behavior, appearance, and logging."
+                               Style="{StaticResource PageSubtitleText}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Restore defaults" Command="{Binding RestoreDefaultsCommand}" Margin="0,0,10,0" />
+                    <Button Content="Save settings" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" />
+                </StackPanel>
+            </Grid>
+
+            <Border Background="{DynamicResource SuccessSoftBrush}" BorderBrush="{DynamicResource SuccessBorderBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,16,0,0"
+                    Visibility="{Binding StatusMessage, Converter={StaticResource StringToVisibility}}">
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource SuccessBrush}" />
+            </Border>
+            <Border Background="{DynamicResource DangerSoftBrush}" BorderBrush="{DynamicResource DangerBorderBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,16,0,0"
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibility}}">
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" />
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Appearance" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Choose a light or dark interface, or follow the Windows app theme." Style="{StaticResource MutedText}"
+                                   Margin="0,5,20,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" MaxWidth="420" HorizontalAlignment="Left">
+                        <TextBlock Text="Theme" Style="{StaticResource FieldLabelText}" />
+                        <ComboBox ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource ThemeDisplay}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Text="Theme changes are applied immediately when settings are saved." Style="{StaticResource HelpText}" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="IIS defaults" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Defaults used by the Create Website dialog. Each website can override folder, port, binding, and pool."
+                                   Style="{StaticResource MutedText}" Margin="0,5,20,0" />
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Default IIS root" Style="{StaticResource FieldLabelText}" />
+                            <TextBox Text="{Binding DefaultIisRoot, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Must be an absolute path on the remote server, for example C:\inetpub." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Default website port" Style="{StaticResource FieldLabelText}" />
+                            <TextBox Text="{Binding DefaultWebsitePortText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Used only as a starting value. IIS bindings are still validated for conflicts." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,16,0,0">
+                            <TextBlock Text="Application pool name pattern" Style="{StaticResource FieldLabelText}" />
+                            <TextBox Text="{Binding ApplicationPoolPattern, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Use the {site} token to insert the website name, for example {site}Pool." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Margin="0,16,20,0">
+                            <TextBlock Text=".NET CLR version" Style="{StaticResource FieldLabelText}" />
+                            <ComboBox ItemsSource="{Binding RuntimeOptions}" SelectedItem="{Binding ApplicationPoolRuntime}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,16,0,0">
+                            <TextBlock Text="Managed pipeline mode" Style="{StaticResource FieldLabelText}" />
+                            <ComboBox ItemsSource="{Binding PipelineOptions}" SelectedItem="{Binding ApplicationPoolPipeline}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Connection behavior" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Timeouts protect the interface from hanging while a server is unreachable." Style="{StaticResource MutedText}"
+                                   Margin="0,5,20,0" />
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="SSH connection timeout (seconds)" Style="{StaticResource FieldLabelText}" />
+                            <TextBox Text="{Binding ConnectionTimeoutText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Allowed range: 5 to 300 seconds." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Remote command timeout (seconds)" Style="{StaticResource FieldLabelText}" />
+                            <TextBox Text="{Binding CommandTimeoutText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Used as the default ceiling for long-running remote scripts." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Logging" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Application logs are separate from the user-visible activity log. Credentials and secrets are never written to either log."
+                                      Style="{StaticResource MutedText}" Margin="0,5,20,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" MaxWidth="420" HorizontalAlignment="Left">
+                        <CheckBox Content="Write application diagnostics to a local file" IsChecked="{Binding EnableFileLogging}" />
+                        <TextBlock Text="Minimum log level" Style="{StaticResource FieldLabelText}" Margin="0,16,0,6" />
+                        <ComboBox ItemsSource="{Binding LogLevelOptions}" SelectedItem="{Binding MinimumLogLevel}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                            <Button Content="Open logs folder" Command="{Binding OpenLogsFolderCommand}" Margin="0,0,8,0" />
+                            <Button Content="Open data folder" Command="{Binding OpenDataFolderCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Data and security" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Profiles, settings, encrypted credentials, and activity logs stay on this Windows account."
+                                   Style="{StaticResource MutedText}" Margin="0,5,20,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Application data folder" Style="{StaticResource FieldLabelText}" />
+                        <TextBox Text="{Binding DataFolderPath, Mode=OneWay}" IsReadOnly="True" FontFamily="Consolas" FontSize="11" />
+                        <TextBlock Text="Credential secrets are encrypted with Windows DPAPI (CurrentUser scope). SSH host keys are pinned and verified on every connection."
+                                   Style="{StaticResource HelpText}" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <TextBlock Text="Server Manager · Windows Server &amp; IIS management" Style="{StaticResource HelpText}"
+                       Margin="0,20,0,0" HorizontalAlignment="Center" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

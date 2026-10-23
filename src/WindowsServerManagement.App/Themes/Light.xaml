@@ -1,0 +1,64 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F6FA" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="#F8FAFD" />
+    <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#EFF5FC" />
+    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SidebarBorderBrush" Color="#E4EAF2" />
+    <SolidColorBrush x:Key="SidebarSelectedBrush" Color="#E8F2FD" />
+    <SolidColorBrush x:Key="SidebarSelectedTextBrush" Color="#0B5CAB" />
+    <SolidColorBrush x:Key="TitleBarBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#E2E9F2" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#E7EDF4" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#17243A" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#56677E" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#8695A8" />
+    <SolidColorBrush x:Key="TextOnAccentBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#0F6CBD" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#115EA3" />
+    <SolidColorBrush x:Key="AccentPressedBrush" Color="#0C3F70" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#E5F1FC" />
+    <SolidColorBrush x:Key="AccentBorderBrush" Color="#B7D5F5" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#0E7A34" />
+    <SolidColorBrush x:Key="SuccessSoftBrush" Color="#E7F6EC" />
+    <SolidColorBrush x:Key="SuccessBorderBrush" Color="#B7E4C7" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#C42B1C" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#A4261A" />
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#FDECEA" />
+    <SolidColorBrush x:Key="DangerBorderBrush" Color="#F4C7C1" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#8A6100" />
+    <SolidColorBrush x:Key="WarningSoftBrush" Color="#FFF6D6" />
+    <SolidColorBrush x:Key="WarningBorderBrush" Color="#EFD79B" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#CBD7E5" />
+    <SolidColorBrush x:Key="InputDisabledBrush" Color="#F1F5F9" />
+    <SolidColorBrush x:Key="TableHeaderBrush" Color="#F7FAFD" />
+    <SolidColorBrush x:Key="TableRowHoverBrush" Color="#F3F8FD" />
+    <SolidColorBrush x:Key="TableRowSelectedBrush" Color="#E8F2FD" />
+    <SolidColorBrush x:Key="SecondaryButtonBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SecondaryButtonHoverBrush" Color="#F2F7FD" />
+    <SolidColorBrush x:Key="SecondaryButtonBorderBrush" Color="#CEDAE8" />
+    <SolidColorBrush x:Key="SubtleHoverBrush" Color="#EDF4FC" />
+    <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="#C5D0DE" />
+    <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#A8B7C9" />
+    <SolidColorBrush x:Key="ProgressTrackBrush" Color="#E5ECF5" />
+    <SolidColorBrush x:Key="CaptionButtonHoverBrush" Color="#EAF0F7" />
+    <SolidColorBrush x:Key="CloseButtonHoverBrush" Color="#C42B1C" />
+    <SolidColorBrush x:Key="CloseButtonHoverTextBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="OverlayBrush" Color="#66000000" />
+    <SolidColorBrush x:Key="CodeBackgroundBrush" Color="#F4F7FB" />
+    <SolidColorBrush x:Key="IconTileBrush" Color="#E8F2FD" />
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="#A9B5C5" />
+
+    <LinearGradientBrush x:Key="BrandGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0F6CBD" Offset="0" />
+        <GradientStop Color="#159A91" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0E5FA8" Offset="0" />
+        <GradientStop Color="#0A7F83" Offset="0.62" />
+        <GradientStop Color="#0F9B8D" Offset="1" />
+    </LinearGradientBrush>
+</ResourceDictionary>

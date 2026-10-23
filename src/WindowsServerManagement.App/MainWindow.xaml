@@ -1,0 +1,138 @@
+<Window x:Class="WindowsServerManagement.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:conv="clr-namespace:WindowsServerManagement.App.Converters"
+        Title="Server Manager" Width="1280" Height="780" MinWidth="1080" MinHeight="640" WindowState="Maximized"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
+        Background="{DynamicResource WindowBackgroundBrush}" UseLayoutRounding="True"
+        SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display">
+    <Window.Resources>
+        <conv:ConnectionStateToBrushConverter x:Key="StateBrush" />
+    </Window.Resources>
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="238" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" Background="{DynamicResource SidebarBackgroundBrush}"
+                BorderBrush="{DynamicResource SidebarBorderBrush}" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="56" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="18,0,14,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="34" Height="34" CornerRadius="9" Background="{DynamicResource BrandGradientBrush}">
+                        <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                        <TextBlock Text="Server Manager" FontSize="14" FontWeight="SemiBold" />
+                        <TextBlock Text="Windows &amp; IIS control" FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" />
+                    </StackPanel>
+                </Grid>
+
+                <ListBox Grid.Row="1" Margin="0,14,0,0" ItemsSource="{Binding NavigationItems}"
+                         SelectedItem="{Binding SelectedNavigation, Mode=TwoWay}"
+                         ItemContainerStyle="{StaticResource NavigationListBoxItem}" Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="28" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                           VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center" FontSize="13"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="2" Margin="18,0,18,16">
+                    <Border Height="1" Background="{DynamicResource DividerBrush}" Margin="0,0,0,12" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                   Foreground="{DynamicResource SuccessBrush}" Margin="0,1,6,0" />
+                        <TextBlock Text="Secure SSH + DPAPI" Style="{StaticResource HelpText}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding AppVersion}" Style="{StaticResource HelpText}" HorizontalAlignment="Center"
+                               Margin="0,6,0,0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Background="{DynamicResource TitleBarBrush}"
+                BorderBrush="{DynamicResource DividerBrush}" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
+                    <TextBlock Text="Target server" Style="{StaticResource HelpText}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox Width="290" ItemsSource="{Binding Catalog.Servers}" SelectedItem="{Binding Catalog.SelectedServer, Mode=TwoWay}"
+                              ToolTip="Select the active server">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Width="7" Height="7" Fill="{Binding ConnectionState, Converter={StaticResource StateBrush}}"
+                                             VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Endpoint}" Foreground="{DynamicResource TextTertiaryBrush}"
+                                                   Margin="8,0,0,0" FontSize="11" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <Border Grid.Column="1" Background="Transparent" MouseLeftButtonDown="TitleArea_MouseLeftButtonDown" />
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                    <Button Style="{StaticResource IconButton}" Content="{Binding ThemeGlyph}" ToolTip="{Binding ThemeToolTip}"
+                            Command="{Binding ToggleThemeCommand}" Margin="0,0,6,0" />
+                    <Border Width="1" Height="22" Background="{DynamicResource DividerBrush}" Margin="2,0,8,0" />
+                    <Button x:Name="MinimizeButton" Style="{StaticResource IconButton}" Content="&#xE921;" ToolTip="Minimize"
+                            Click="Minimize_Click" />
+                    <Button x:Name="MaximizeButton" Style="{StaticResource IconButton}" ToolTip="Maximize" Click="Maximize_Click">
+                        <TextBlock x:Name="MaxGlyph" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                    </Button>
+                    <Button x:Name="CloseButton" Style="{StaticResource IconButton}" Content="&#xE711;" ToolTip="Close" Click="Close_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
+    </Grid>
+</Window>
