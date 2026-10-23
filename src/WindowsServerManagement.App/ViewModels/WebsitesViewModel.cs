@@ -86,6 +86,7 @@ public sealed partial class WebsitesViewModel : ObservableObject
     public bool HasSelectedWebsite => SelectedWebsite is not null;
     public bool HasWebsites => Websites.Count > 0;
     public bool HasNoWebsites => Websites.Count == 0;
+    public bool HasVisibleWebsites => WebsitesView.Cast<IisWebsite>().Any();
     public string ServerName => SelectedServer?.Name ?? "No server selected";
     public string ServerEndpoint => SelectedServer?.Endpoint ?? string.Empty;
     public string EmptyMessage => SelectedServer is null
@@ -539,7 +540,8 @@ public sealed partial class WebsitesViewModel : ObservableObject
         }
 
         SelectedWebsite = Websites.FirstOrDefault(site =>
-            string.Equals(site.Name, selectedName, StringComparison.OrdinalIgnoreCase));
+                               string.Equals(site.Name, selectedName, StringComparison.OrdinalIgnoreCase))
+                           ?? Websites.FirstOrDefault();
         WebsitesView.Refresh();
         UpdateFilteredState();
     }
@@ -572,6 +574,7 @@ public sealed partial class WebsitesViewModel : ObservableObject
             : $"{visible} of {Websites.Count} website(s)";
         OnPropertyChanged(nameof(HasWebsites));
         OnPropertyChanged(nameof(HasNoWebsites));
+        OnPropertyChanged(nameof(HasVisibleWebsites));
         OnPropertyChanged(nameof(EmptyMessage));
     }
 
@@ -677,6 +680,7 @@ public sealed partial class WebsitesViewModel : ObservableObject
         OnPropertyChanged(nameof(ServerEndpoint));
         OnPropertyChanged(nameof(HasWebsites));
         OnPropertyChanged(nameof(HasNoWebsites));
+        OnPropertyChanged(nameof(HasVisibleWebsites));
         OnPropertyChanged(nameof(EmptyMessage));
         UpdateFilteredState();
     }

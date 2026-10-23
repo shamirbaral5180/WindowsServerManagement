@@ -113,7 +113,7 @@
                             <TextBlock Text="Physical path on the remote server" Style="{StaticResource FieldLabelText}" />
                             <TextBlock Text="{Binding PhysicalPathPreview}" FontFamily="Consolas" FontSize="12"
                                        Foreground="{DynamicResource AccentBrush}" TextWrapping="Wrap" />
-                            <TextBlock Style="{StaticResource HelpText}" Margin="0,4,0,0"><Run Text="IIS root: " /><Run Text="{Binding IisRoot}" /></TextBlock>
+                            <TextBlock Style="{StaticResource HelpText}" Margin="0,4,0,0"><Run Text="IIS root: " /><Run Text="{Binding IisRoot, Mode=OneWay}" /></TextBlock>
                         </StackPanel>
                     </Border>
 

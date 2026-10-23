@@ -34,7 +34,7 @@
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock FontSize="16" FontWeight="SemiBold"><Run Text="Edit bindings - " /><Run Text="{Binding WebsiteName}" /></TextBlock>
+                    <TextBlock FontSize="16" FontWeight="SemiBold"><Run Text="Edit bindings - " /><Run Text="{Binding WebsiteName, Mode=OneWay}" /></TextBlock>
                     <TextBlock Text="{Binding ServerName}" Style="{StaticResource HelpText}" Margin="0,2,0,0" />
                 </StackPanel>
                 <Button Grid.Column="2" Content="&#xE711;" Style="{StaticResource IconButton}" Width="32" Height="32"
@@ -115,7 +115,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel>
                         <TextBlock Text="Each HTTPS binding must reference a certificate with a private key in LocalMachine\My." Style="{StaticResource HelpText}" />
-                        <TextBlock Style="{StaticResource HelpText}" Margin="0,3,0,0"><Run Text="Physical path: " /><Run Text="{Binding PhysicalPath}" /></TextBlock>
+                        <TextBlock Style="{StaticResource HelpText}" Margin="0,3,0,0"><Run Text="Physical path: " /><Run Text="{Binding PhysicalPath, Mode=OneWay}" /></TextBlock>
                     </StackPanel>
                     <Button Grid.Column="1" Content="+  Add binding" Command="{Binding AddBindingCommand}" VerticalAlignment="Center" />
                 </Grid>
