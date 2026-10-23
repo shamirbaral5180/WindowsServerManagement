@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WindowsServerManagement.App.ViewModels;
 
@@ -28,6 +29,22 @@ public partial class ServerEditorDialog : Window
         if (_viewModel.IsBusy)
         {
             e.Cancel = true;
+        }
+    }
+
+    private void PasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ServerEditorViewModel viewModel && sender is PasswordBox passwordBox)
+        {
+            viewModel.Password = passwordBox.Password;
+        }
+    }
+
+    private void PassphraseInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ServerEditorViewModel viewModel && sender is PasswordBox passwordBox)
+        {
+            viewModel.Passphrase = passwordBox.Password;
         }
     }
 

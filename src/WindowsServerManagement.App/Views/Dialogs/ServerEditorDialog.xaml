@@ -2,7 +2,6 @@
         Title="Server profile"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:behaviors="clr-namespace:WindowsServerManagement.App.Behaviors"
         xmlns:conv="clr-namespace:WindowsServerManagement.App.Converters"
         Width="760" Height="840" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
@@ -99,7 +98,7 @@
                     <TextBlock Text="Credential" Style="{StaticResource SectionTitleText}" Margin="0,0,0,12" />
                     <StackPanel Visibility="{Binding IsPasswordAuthentication, Converter={StaticResource BoolToVisibility}}">
                         <TextBlock Text="Password" Style="{StaticResource FieldLabelText}" />
-                        <PasswordBox behaviors:PasswordBoxAssistant.BoundPassword="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <PasswordBox x:Name="PasswordInput" PasswordChanged="PasswordInput_OnPasswordChanged" />
                     </StackPanel>
                     <StackPanel Visibility="{Binding IsPrivateKeyAuthentication, Converter={StaticResource BoolToVisibility}}">
                         <TextBlock Text="Private key file" Style="{StaticResource FieldLabelText}" />
@@ -113,7 +112,7 @@
                         </Grid>
                         <TextBlock Text="Supported formats include OpenSSH RSA/ECDSA/Ed25519 and PuTTY PPK." Style="{StaticResource HelpText}" Margin="0,5,0,0" />
                         <TextBlock Text="{Binding SecretLabel}" Style="{StaticResource FieldLabelText}" Margin="0,14,0,6" />
-                        <PasswordBox behaviors:PasswordBoxAssistant.BoundPassword="{Binding Passphrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <PasswordBox x:Name="PassphraseInput" PasswordChanged="PassphraseInput_OnPasswordChanged" />
                     </StackPanel>
                     <TextBlock Text="{Binding SecretHint}" Style="{StaticResource HelpText}" Margin="0,6,0,0" />
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0"
