@@ -48,6 +48,13 @@ public sealed class IisWebsite
         : string.Join(Environment.NewLine, Bindings.Select(binding => binding.Display));
 
     [JsonIgnore]
+    public string BindingsSummary => Bindings.Count == 0
+        ? "No bindings"
+        : Bindings.Count == 1
+            ? Bindings[0].Display
+            : $"{Bindings[0].Display} +{Bindings.Count - 1}";
+
+    [JsonIgnore]
     public bool IsRunning => string.Equals(State, "Started", StringComparison.OrdinalIgnoreCase);
 
     [JsonIgnore]
@@ -104,8 +111,10 @@ public sealed class WebsiteCreateRequest
     public string CertificateThumbprint { get; set; } = string.Empty;
     public string ApplicationPoolName { get; set; } = string.Empty;
     public string IisRoot { get; set; } = @"C:\inetpub";
+    public string PhysicalPath { get; set; } = string.Empty;
     public string ApplicationPoolRuntimeVersion { get; set; } = "v4.0";
     public string ApplicationPoolPipelineMode { get; set; } = "Integrated";
+    public bool StartApplicationPoolImmediately { get; set; } = true;
     public bool UseExistingFolder { get; set; }
     public bool StartImmediately { get; set; } = true;
 

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,14 +17,14 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
     private readonly WebsiteManagementService _websitesService;
     private readonly IAppSettingsService _settings;
     private CancellationTokenSource? _operationSource;
-    private string _lastSuggestedFolder = string.Empty;
+    private string _lastSuggestedPath = string.Empty;
     private string _lastSuggestedPool = string.Empty;
 
     [ObservableProperty]
     private string _name = string.Empty;
 
     [ObservableProperty]
-    private string _folderName = string.Empty;
+    private string _physicalPath = string.Empty;
 
     [ObservableProperty]
     private string _portText;
@@ -42,6 +43,15 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
 
     [ObservableProperty]
     private string _applicationPoolName = string.Empty;
+
+    [ObservableProperty]
+    private string _applicationPoolRuntimeVersion = "v4.0";
+
+    [ObservableProperty]
+    private string _applicationPoolPipelineMode = "Integrated";
+
+    [ObservableProperty]
+    private bool _startApplicationPoolImmediately = true;
 
     [ObservableProperty]
     private bool _useExistingFolder;
@@ -71,9 +81,6 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
     private string? _warningsText;
 
     [ObservableProperty]
-    private string _physicalPathPreview = string.Empty;
-
-    [ObservableProperty]
     private bool _isLoadingCertificates;
 
     [ObservableProperty]
@@ -89,8 +96,8 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
         _settings = settings;
         _portText = settings.Current.DefaultWebsitePort.ToString();
         IisRoot = settings.Current.DefaultIisRoot;
-        ApplicationPoolRuntime = settings.Current.DefaultApplicationPoolRuntimeVersion;
-        ApplicationPoolPipeline = settings.Current.DefaultApplicationPoolPipelineMode;
+        ApplicationPoolRuntimeVersion = settings.Current.DefaultApplicationPoolRuntimeVersion;
+        ApplicationPoolPipelineMode = settings.Current.DefaultApplicationPoolPipelineMode;
     }
 
     public event EventHandler<bool>? CloseRequested;
@@ -98,11 +105,11 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
     public bool CanCreate => !IsBusy && !IsComplete;
     public bool IsHttps => UseHttps;
     public bool HasResult => IsComplete;
-    public string ServerSummary => $"{_server.Name} · {_server.Endpoint}";
+    public string ServerSummary => $"{_server.Name} | {_server.Endpoint}";
     public string IisRoot { get; }
-    public string ApplicationPoolRuntime { get; }
-    public string ApplicationPoolPipeline { get; }
     public IReadOnlyList<string> Protocols { get; } = ["HTTP", "HTTPS"];
+    public IReadOnlyList<string> RuntimeOptions { get; } = ["v4.0", "v2.0", "No Managed Code"];
+    public IReadOnlyList<string> PipelineOptions { get; } = ["Integrated", "Classic"];
     public ObservableCollection<IisCertificateInfo> Certificates { get; } = [];
     public string SelectedProtocol
     {
@@ -113,7 +120,6 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
     public async Task InitializeAsync()
     {
         UpdateSuggestions(force: true);
-        OnPropertyChanged(nameof(PhysicalPathPreview));
         if (UseHttps)
         {
             await LoadCertificatesAsync().ConfigureAwait(true);
@@ -178,7 +184,7 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
                              """;
             if (result.Warnings.Count > 0)
             {
-                WarningsText = string.Join(Environment.NewLine, result.Warnings.Select(warning => "• " + warning));
+                WarningsText = string.Join(Environment.NewLine, result.Warnings.Select(warning => "- " + warning));
             }
         }
         catch (OperationCanceledException)
@@ -231,11 +237,6 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
         UpdateSuggestions(force: false);
     }
 
-    partial void OnFolderNameChanged(string value)
-    {
-        UpdatePhysicalPathPreview();
-    }
-
     partial void OnUseHttpsChanged(bool value)
     {
         OnPropertyChanged(nameof(IsHttps));
@@ -257,12 +258,15 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
     private void UpdateSuggestions(bool force)
     {
         var name = Name.Trim();
-        var suggestedFolder = name;
-        if (force || string.IsNullOrWhiteSpace(FolderName) ||
-            string.Equals(FolderName, _lastSuggestedFolder, StringComparison.Ordinal))
+        var suggestedPath = WebsitePathSafety.BuildPhysicalPath(IisRoot, name, out var path, out _)
+            ? path
+            : string.Empty;
+
+        if (force || string.IsNullOrWhiteSpace(PhysicalPath) ||
+            string.Equals(PhysicalPath, _lastSuggestedPath, StringComparison.OrdinalIgnoreCase))
         {
-            FolderName = suggestedFolder;
-            _lastSuggestedFolder = suggestedFolder;
+            PhysicalPath = suggestedPath;
+            _lastSuggestedPath = suggestedPath;
         }
 
         var pattern = _settings.Current.DefaultApplicationPoolPattern;
@@ -273,31 +277,26 @@ public sealed partial class CreateWebsiteViewModel : ObservableObject
             ApplicationPoolName = suggestedPool;
             _lastSuggestedPool = suggestedPool;
         }
-
-        UpdatePhysicalPathPreview();
-    }
-
-    private void UpdatePhysicalPathPreview()
-    {
-        PhysicalPathPreview = WebsitePathSafety.BuildPhysicalPath(IisRoot, FolderName, out var path, out _)
-            ? path
-            : string.Empty;
     }
 
     private WebsiteCreateRequest BuildRequest(int port)
     {
+        var physicalPath = PhysicalPath.Trim();
+        var folderName = Path.GetFileName(physicalPath.TrimEnd('\\'));
         return new WebsiteCreateRequest
         {
             Name = Name.Trim(),
-            FolderName = FolderName.Trim(),
+            FolderName = string.IsNullOrWhiteSpace(folderName) ? Name.Trim() : folderName,
+            PhysicalPath = physicalPath,
             Port = port,
             Hostname = Hostname.Trim(),
             UseHttps = UseHttps,
             CertificateThumbprint = WebsiteValidator.NormalizeThumbprint(CertificateThumbprint),
             ApplicationPoolName = ApplicationPoolName.Trim(),
             IisRoot = IisRoot,
-            ApplicationPoolRuntimeVersion = ApplicationPoolRuntime,
-            ApplicationPoolPipelineMode = ApplicationPoolPipeline,
+            ApplicationPoolRuntimeVersion = ApplicationPoolRuntimeVersion,
+            ApplicationPoolPipelineMode = ApplicationPoolPipelineMode,
+            StartApplicationPoolImmediately = StartApplicationPoolImmediately,
             UseExistingFolder = UseExistingFolder,
             StartImmediately = StartImmediately
         };

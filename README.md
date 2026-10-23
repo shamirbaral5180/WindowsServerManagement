@@ -2,7 +2,7 @@
 
 A Windows desktop application for connecting to multiple remote Windows Servers over SSH and creating and managing IIS websites on the selected server.
 
-The UI is a light, IIS-style management console with a server selector, site list, action panel, clear status indicators, and a simple light theme by default. Dark mode is also available.
+The UI is an IIS-style management console with a Connections sidebar, server tree, site table, and Actions pane. The light theme is the default; dark mode is also available.
 
 - **Framework:** C# 13, .NET 10 WPF, MVVM
 - **UI:** CommunityToolkit.Mvvm, custom WPF styles and resources
@@ -27,7 +27,7 @@ The source builds cleanly and all unit tests pass. The implementation includes:
   2. Verifies the remote Windows/IIS/PowerShell/elevation environment.
   3. Checks for an existing site and binding conflict.
   4. Creates the remote folder under the configured IIS root (default `C:\inetpub`).
-  5. Creates/reuses the application pool.
+  5. Creates or reuses the application pool with the selected CLR version, pipeline mode, and start state.
   6. Creates the IIS site and binding.
   7. Grants the app-pool identity `Read & Execute` access to the folder.
   8. Rolls back resources it created if a step fails.
@@ -43,7 +43,7 @@ The source builds cleanly and all unit tests pass. The implementation includes:
 The solution was built and tested on this development machine. The following were verified locally:
 
 - `dotnet build WindowsServerManagement.sln` succeeds with zero warnings/errors.
-- `dotnet test` passes **33/33** tests.
+- `dotnet test` passes **35/35** tests.
 - All generated remote PowerShell scripts pass the Windows PowerShell parser.
 - The WPF application launches and the main pages and Add Server dialog render successfully.
 
@@ -176,11 +176,11 @@ This works when the OpenSSH default shell is either `cmd.exe` or PowerShell. See
 ## IIS website behavior
 
 - Default remote root: `C:\inetpub` (configurable in Settings).
-- Default folder: website name.
+- Default physical path: `<IIS root>\<website name>`, editable before creation.
 - Default binding: `http://*:<port>/`.
 - Port conflict check compares protocol, port, and host header.
 - Existing folders are rejected unless **Use existing folder** is explicitly enabled.
-- A new application pool is created from the configured runtime/pipeline defaults. If the pool already exists, it is reused without changing its settings.
+- A new application pool is created with the selected CLR version and pipeline mode. The pool can be started immediately or left stopped. If the pool already exists, it is reused without changing its settings.
 - The site is created, the app-pool identity receives `Read & Execute`, and then the site is started if requested.
 - If any failure occurs after resources are created, only those resources are rolled back. Existing folders/pools are not deleted.
 - Deleting a site removes only IIS configuration. Files remain unless the separate folder-deletion confirmation is accepted.

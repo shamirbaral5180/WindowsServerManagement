@@ -17,11 +17,11 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="238" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="56" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -29,55 +29,89 @@
                 BorderBrush="{DynamicResource SidebarBorderBrush}" BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="56" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="18,0,14,0">
+                <Grid Grid.Row="0" Margin="14,0,12,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="36" />
+                        <ColumnDefinition Width="32" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border Width="34" Height="34" CornerRadius="9" Background="{DynamicResource BrandGradientBrush}">
-                        <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="White"
+                    <Border Width="30" Height="30" CornerRadius="3" Background="{DynamicResource BrandGradientBrush}">
+                        <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="White"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                        <TextBlock Text="Server Manager" FontSize="14" FontWeight="SemiBold" />
-                        <TextBlock Text="Windows &amp; IIS control" FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="9,0,0,0">
+                        <TextBlock Text="Server Manager" FontSize="13" FontWeight="SemiBold" />
+                        <TextBlock Text="Windows &amp; IIS management" FontSize="9.5" Foreground="{DynamicResource TextTertiaryBrush}" />
                     </StackPanel>
                 </Grid>
 
-                <ListBox Grid.Row="1" Margin="0,14,0,0" ItemsSource="{Binding NavigationItems}"
+                <TextBlock Grid.Row="1" Text="CONNECTIONS" FontSize="9.5" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextTertiaryBrush}" Margin="14,8,0,3" />
+
+                <ListBox Grid.Row="2" ItemsSource="{Binding NavigationItems}"
                          SelectedItem="{Binding SelectedNavigation, Mode=TwoWay}"
                          ItemContainerStyle="{StaticResource NavigationListBoxItem}" Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="28" />
+                                    <ColumnDefinition Width="25" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="14"
                                            VerticalAlignment="Center"
                                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
-                                <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center" FontSize="13"
+                                <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center" FontSize="12"
                                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <StackPanel Grid.Row="2" Margin="18,0,18,16">
-                    <Border Height="1" Background="{DynamicResource DividerBrush}" Margin="0,0,0,12" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="11"
-                                   Foreground="{DynamicResource SuccessBrush}" Margin="0,1,6,0" />
-                        <TextBlock Text="Secure SSH + DPAPI" Style="{StaticResource HelpText}" />
-                    </StackPanel>
-                    <TextBlock Text="{Binding AppVersion}" Style="{StaticResource HelpText}" HorizontalAlignment="Center"
-                               Margin="0,6,0,0" />
+                <Grid Grid.Row="3" Margin="14,10,8,3">
+                    <TextBlock Text="SERVERS" FontSize="9.5" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="Select a target" FontSize="9.5" Foreground="{DynamicResource TextTertiaryBrush}"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+
+                <ListBox Grid.Row="4" ItemsSource="{Binding Catalog.Servers}"
+                         SelectedItem="{Binding Catalog.SelectedServer, Mode=TwoWay}"
+                         ItemContainerStyle="{StaticResource ConnectionServerListItem}"
+                         Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,0,6">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="7" Height="7" Fill="{Binding ConnectionState, Converter={StaticResource StateBrush}}"
+                                         VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="2,0,0,0">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="11.5" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Endpoint}" FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="5" Margin="14,0,14,12">
+                    <Border Height="1" Background="{DynamicResource DividerBrush}" Margin="0,0,0,8" />
+                    <Grid>
+                        <TextBlock Text="Secure SSH + DPAPI" Style="{StaticResource HelpText}" FontSize="10" />
+                        <TextBlock Text="{Binding AppVersion}" Style="{StaticResource HelpText}" FontSize="10"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Border>
@@ -91,42 +125,27 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
-                    <TextBlock Text="Target server" Style="{StaticResource HelpText}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                    <ComboBox Width="290" ItemsSource="{Binding Catalog.Servers}" SelectedItem="{Binding Catalog.SelectedServer, Mode=TwoWay}"
-                              ToolTip="Select the active server">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="16" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Width="7" Height="7" Fill="{Binding ConnectionState, Converter={StaticResource StateBrush}}"
-                                             VerticalAlignment="Center" />
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding Endpoint}" Foreground="{DynamicResource TextTertiaryBrush}"
-                                                   Margin="8,0,0,0" FontSize="11" />
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0"
+                            MouseLeftButtonDown="TitleArea_MouseLeftButtonDown" Background="Transparent">
+                    <TextBlock Text="Server Manager" FontSize="12" FontWeight="SemiBold" />
+                    <TextBlock Text="  /  " FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" />
+                    <TextBlock Text="{Binding CurrentPageTitle}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" />
                 </StackPanel>
 
                 <Border Grid.Column="1" Background="Transparent" MouseLeftButtonDown="TitleArea_MouseLeftButtonDown" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
                     <Button Style="{StaticResource IconButton}" Content="{Binding ThemeGlyph}" ToolTip="{Binding ThemeToolTip}"
-                            Command="{Binding ToggleThemeCommand}" Margin="0,0,6,0" />
-                    <Border Width="1" Height="22" Background="{DynamicResource DividerBrush}" Margin="2,0,8,0" />
+                            Command="{Binding ToggleThemeCommand}" Margin="0,0,4,0" Width="30" Height="30" MinHeight="30" />
+                    <Border Width="1" Height="20" Background="{DynamicResource DividerBrush}" Margin="2,0,6,0" />
                     <Button x:Name="MinimizeButton" Style="{StaticResource IconButton}" Content="&#xE921;" ToolTip="Minimize"
-                            Click="Minimize_Click" />
-                    <Button x:Name="MaximizeButton" Style="{StaticResource IconButton}" ToolTip="Maximize" Click="Maximize_Click">
-                        <TextBlock x:Name="MaxGlyph" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                            Width="30" Height="30" MinHeight="30" Click="Minimize_Click" />
+                    <Button x:Name="MaximizeButton" Style="{StaticResource IconButton}" ToolTip="Maximize"
+                            Width="30" Height="30" MinHeight="30" Click="Maximize_Click">
+                        <TextBlock x:Name="MaxGlyph" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="11" />
                     </Button>
-                    <Button x:Name="CloseButton" Style="{StaticResource IconButton}" Content="&#xE711;" ToolTip="Close" Click="Close_Click" />
+                    <Button x:Name="CloseButton" Style="{StaticResource IconButton}" Content="&#xE711;" ToolTip="Close"
+                            Width="30" Height="30" MinHeight="30" Click="Close_Click" />
                 </StackPanel>
             </Grid>
         </Border>

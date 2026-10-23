@@ -8,7 +8,7 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="30,24,30,34" MaxWidth="1040" HorizontalAlignment="Left">
+        <StackPanel Margin="20,14,20,20" MaxWidth="1040" HorizontalAlignment="Left">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

@@ -15,7 +15,7 @@
     </Style>
 
     <Style x:Key="PageSubtitleText" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Margin" Value="0,5,0,0" />
@@ -51,7 +51,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="Padding" Value="20" />
+        <Setter Property="Padding" Value="14" />
     </Style>
 
     <Style x:Key="SmallCard" TargetType="Border">
@@ -78,10 +78,10 @@
     </Style>
 
     <Style x:Key="ButtonBase" TargetType="Button">
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="MinHeight" Value="36" />
-        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Padding" Value="10,0" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -97,7 +97,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
                     </Border>
@@ -126,7 +126,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
                     </Border>
@@ -156,7 +156,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
                     </Border>
@@ -182,7 +182,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
                     </Border>
@@ -216,6 +216,49 @@
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
+    <Style x:Key="ActionLinkButton" TargetType="Button" BasedOn="{StaticResource SubtleButton}">
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Height" Value="28" />
+    </Style>
+
+    <Style x:Key="DangerActionLinkButton" TargetType="Button" BasedOn="{StaticResource ActionLinkButton}">
+        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+    </Style>
+
+    <Style x:Key="IisToolbarButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentBorderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
@@ -223,15 +266,15 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
-        <Setter Property="Padding" Value="10,7" />
-        <Setter Property="MinHeight" Value="36" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -258,14 +301,14 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
-        <Setter Property="Padding" Value="10,7" />
-        <Setter Property="MinHeight" Value="36" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
                     <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -285,9 +328,9 @@
     </Style>
 
     <Style TargetType="ComboBox">
-        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="MinHeight" Value="30" />
         <Setter Property="Padding" Value="8,4" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
@@ -295,19 +338,19 @@
     </Style>
 
     <Style TargetType="ComboBoxItem">
-        <Setter Property="Padding" Value="10,7" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="FontSize" Value="12" />
     </Style>
 
     <Style TargetType="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="RadioButton">
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
@@ -346,10 +389,10 @@
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="SelectionMode" Value="Single" />
         <Setter Property="SelectionUnit" Value="FullRow" />
-        <Setter Property="RowHeight" Value="46" />
-        <Setter Property="ColumnHeaderHeight" Value="38" />
+        <Setter Property="RowHeight" Value="36" />
+        <Setter Property="ColumnHeaderHeight" Value="32" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     </Style>
@@ -360,7 +403,7 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Padding" Value="8,0" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
@@ -383,7 +426,7 @@
     <Style TargetType="DataGridCell">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Padding" Value="8,0" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Style.Triggers>
@@ -401,10 +444,10 @@
     </Style>
 
     <Style x:Key="NavigationListBoxItem" TargetType="ListBoxItem">
-        <Setter Property="Padding" Value="12,10" />
-        <Setter Property="Margin" Value="12,2" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="Margin" Value="6,1" />
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -412,7 +455,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border x:Name="Root" Background="Transparent" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                    <Border x:Name="Root" Background="Transparent" CornerRadius="2" Padding="{TemplateBinding Padding}">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -430,6 +473,33 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ConnectionServerListItem" TargetType="ListBoxItem">
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="Margin" Value="6,1" />
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Root" Background="Transparent" CornerRadius="2" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SidebarSelectedBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource SidebarSelectedTextBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ServerListBoxItem" TargetType="ListBoxItem">
         <Setter Property="Margin" Value="0,0,0,10" />
         <Setter Property="Padding" Value="0" />
@@ -439,7 +509,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border x:Name="Root" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
-                            BorderThickness="1" CornerRadius="10">
+                            BorderThickness="1" CornerRadius="2">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>

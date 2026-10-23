@@ -7,216 +7,191 @@
         <conv:NullToVisibilityConverter x:Key="NullToVisibility" />
         <conv:ConnectionStateToBrushConverter x:Key="StateBrush" />
         <conv:BooleanToBrushConverter x:Key="BooleanBrush" />
-        <conv:AuthenticationMethodDisplayConverter x:Key="AuthDisplay" />
-        <conv:InverseBooleanConverter x:Key="InverseBool" />
     </UserControl.Resources>
 
-    <Grid Margin="30,24,30,28">
+    <Grid Margin="20,14,20,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <StackPanel>
                 <TextBlock Text="Servers" Style="{StaticResource PageTitleText}" />
-                <TextBlock Text="Manage connection profiles and independent SSH sessions for each Windows server."
+                <TextBlock Text="Manage connection profiles, SSH sessions, and server readiness."
                            Style="{StaticResource PageSubtitleText}" />
             </StackPanel>
-            <Button Grid.Column="1" Content="+  Add server" Style="{StaticResource PrimaryButton}"
-                    Command="{Binding AddServerCommand}" VerticalAlignment="Center" />
+            <Button Content="+  Add Server" Style="{StaticResource PrimaryButton}" Command="{Binding AddServerCommand}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" MinHeight="30" />
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,20,0,0">
+        <Grid Grid.Row="1" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="390" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <Grid>
-                <ListBox ItemsSource="{Binding Catalog.Servers}"
-                         SelectedItem="{Binding Catalog.SelectedServer, Mode=TwoWay}"
-                         ItemContainerStyle="{StaticResource ServerListBoxItem}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="16,14">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="46" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Border Width="42" Height="42" CornerRadius="10" Background="{DynamicResource BrandGradientBrush}"
-                                        VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Initial}" Foreground="White" FontSize="17" FontWeight="SemiBold"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Border>
-                                <StackPanel Grid.Column="1" Margin="12,0,12,0">
-                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding Endpoint}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,2,0,0" />
-                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                                        <TextBlock Text="{Binding AuthenticationLabel}" Style="{StaticResource HelpText}" />
-                                        <TextBlock Text="  ·  " Style="{StaticResource HelpText}" />
-                                        <TextBlock Text="{Binding LastConnectedText}" Style="{StaticResource HelpText}" />
-                                    </StackPanel>
-                                    <TextBlock Text="{Binding WebsiteSummary}" Style="{StaticResource HelpText}" Margin="0,4,0,0" />
-                                </StackPanel>
-                                <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top">
-                                    <Border Style="{StaticResource StatusPill}" Background="{DynamicResource SurfaceAltBrush}">
-                                        <StackPanel Orientation="Horizontal">
+            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1" CornerRadius="2">
+                <Grid>
+                    <DataGrid ItemsSource="{Binding Catalog.Servers}" SelectedItem="{Binding Catalog.SelectedServer, Mode=TwoWay}"
+                              RowHeight="34" ColumnHeaderHeight="31">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="1.2*" />
+                            <DataGridTextColumn Header="Host" Binding="{Binding Endpoint}" Width="1.3*" />
+                            <DataGridTextColumn Header="Username" Binding="{Binding Profile.Username}" Width="1.1*" />
+                            <DataGridTemplateColumn Header="Status" Width="110">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Ellipse Width="7" Height="7" Fill="{Binding ConnectionState, Converter={StaticResource StateBrush}}"
                                                      VerticalAlignment="Center" Margin="0,0,6,0" />
-                                            <TextBlock Text="{Binding StatusMessage}" FontSize="11" FontWeight="SemiBold"
+                                            <TextBlock Text="{Binding StatusMessage}" FontSize="11"
                                                        Foreground="{Binding ConnectionState, Converter={StaticResource StateBrush}}" />
                                         </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding CapabilitySummary}" Style="{StaticResource HelpText}" HorizontalAlignment="Right"
-                                               Margin="0,7,0,0"
-                                               Foreground="{Binding IsManagementReady, Converter={StaticResource BooleanBrush}}" />
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Last Connected" Binding="{Binding LastConnectedText}" Width="130" />
+                            <DataGridTextColumn Header="Websites" Binding="{Binding WebsiteSummary}" Width="200" />
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-                <Border Style="{StaticResource Card}" Padding="30"
-                        Visibility="{Binding HasNoServers, Converter={StaticResource BoolToVisibility}}"
-                        VerticalAlignment="Top" Margin="0,0,0,0">
-                    <StackPanel HorizontalAlignment="Center">
-                        <Border Width="58" Height="58" CornerRadius="14" Background="{DynamicResource IconTileBrush}">
-                            <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="26"
-                                       Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" />
-                        </Border>
-                        <TextBlock Text="No servers yet" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,0" />
-                        <TextBlock Text="Add your first Windows Server profile. Your password is stored with Windows DPAPI, not in plain text."
-                                   Style="{StaticResource MutedText}" HorizontalAlignment="Center" TextAlignment="Center"
-                                   MaxWidth="430" Margin="0,6,0,14" />
-                        <Button Content="Add server" Style="{StaticResource PrimaryButton}" Command="{Binding AddServerCommand}"
-                                HorizontalAlignment="Center" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+                    <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="2"
+                            Visibility="{Binding HasNoServers, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="430">
+                            <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="28"
+                                       Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" />
+                            <TextBlock Text="No server connections configured" FontSize="13" FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" Margin="0,10,0,0" />
+                            <TextBlock Text="Add a Windows Server profile to connect over SSH and manage IIS."
+                                       Style="{StaticResource MutedText}" HorizontalAlignment="Center" TextAlignment="Center"
+                                       Margin="0,4,0,10" />
+                            <Button Content="Add Server" Style="{StaticResource PrimaryButton}" Command="{Binding AddServerCommand}"
+                                    HorizontalAlignment="Center" Height="30" MinHeight="30" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
 
-            <Border Grid.Column="2" Style="{StaticResource Card}" Padding="0"
-                    Visibility="{Binding Catalog.SelectedServer, Converter={StaticResource NullToVisibility}}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel DataContext="{Binding Catalog.SelectedServer}" Margin="20">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="46" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="10" Background="{DynamicResource BrandGradientBrush}">
-                                <TextBlock Text="{Binding Initial}" Foreground="White" FontSize="17" FontWeight="SemiBold"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <StackPanel Grid.Column="1" Margin="12,0,8,0">
-                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="{Binding Endpoint}" Style="{StaticResource MutedText}" FontSize="12" />
+            <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1" CornerRadius="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource DividerBrush}"
+                            BorderThickness="0,0,0,1" Padding="12,9">
+                        <StackPanel>
+                            <TextBlock Text="Actions" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Catalog.SelectedServer.Name}" Style="{StaticResource HelpText}"
+                                       FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <StackPanel Margin="10" VerticalAlignment="Center"
+                                    Visibility="{Binding Catalog.SelectedServer, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
+                            <TextBlock Text="Select a server" Style="{StaticResource MutedText}" TextAlignment="Center" />
+                            <TextBlock Text="Connection and profile actions appear here." Style="{StaticResource HelpText}"
+                                       TextAlignment="Center" Margin="0,3,0,0" />
+                        </StackPanel>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      Visibility="{Binding Catalog.SelectedServer, Converter={StaticResource NullToVisibility}}">
+                            <StackPanel Margin="6,6,6,10">
+                                <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource DividerBrush}"
+                                        BorderThickness="1" CornerRadius="2" Padding="10,8" Margin="2,4,2,8">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="8" Height="8" Fill="{Binding Catalog.SelectedServer.ConnectionState, Converter={StaticResource StateBrush}}"
+                                                     VerticalAlignment="Center" Margin="0,0,7,0" />
+                                            <TextBlock Text="{Binding Catalog.SelectedServer.StatusMessage}" FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="{Binding Catalog.SelectedServer.ConnectionState, Converter={StaticResource StateBrush}}" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Catalog.SelectedServer.LastError}" Style="{StaticResource HelpText}"
+                                                   FontSize="10" TextWrapping="Wrap" Margin="0,5,0,0"
+                                                   Foreground="{DynamicResource DangerBrush}"
+                                                   Visibility="{Binding Catalog.SelectedServer.LastError, Converter={StaticResource NullToVisibility}}" />
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="Connection" Style="{StaticResource FieldLabelText}" Margin="8,5,0,3" />
+                                <Button Content="Connect" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding ConnectCommand}" CommandParameter="{Binding Catalog.SelectedServer}"
+                                        Visibility="{Binding Catalog.SelectedServer.IsConnected, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
+                                <Button Content="Disconnect" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding DisconnectCommand}" CommandParameter="{Binding Catalog.SelectedServer}"
+                                        Visibility="{Binding Catalog.SelectedServer.IsConnected, Converter={StaticResource BoolToVisibility}}" />
+                                <Button Content="Reconnect" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding ReconnectCommand}" CommandParameter="{Binding Catalog.SelectedServer}" />
+                                <Button Content="Test Connection" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding TestConnectionCommand}" CommandParameter="{Binding Catalog.SelectedServer}" />
+                                <Button Content="Diagnostics" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding DiagnoseCommand}" CommandParameter="{Binding Catalog.SelectedServer}" />
+                                <Button Content="Cancel Current Operation" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding CancelOperationCommand}" CommandParameter="{Binding Catalog.SelectedServer}"
+                                        Visibility="{Binding Catalog.SelectedServer.IsBusy, Converter={StaticResource BoolToVisibility}}" />
+
+                                <Border Style="{StaticResource SectionSeparator}" Margin="8,7" />
+
+                                <TextBlock Text="Profile" Style="{StaticResource FieldLabelText}" Margin="8,5,0,3" />
+                                <Button Content="Edit Server" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding EditServerCommand}" CommandParameter="{Binding Catalog.SelectedServer}" />
+                                <Button Content="Forget Trusted Host Key" Style="{StaticResource ActionLinkButton}"
+                                        Command="{Binding ForgetHostKeyCommand}" CommandParameter="{Binding Catalog.SelectedServer}"
+                                        Visibility="{Binding Catalog.SelectedServer.HasTrustedHostKey, Converter={StaticResource BoolToVisibility}}" />
+                                <Button Content="Delete Server Profile" Style="{StaticResource DangerActionLinkButton}"
+                                        Command="{Binding DeleteServerCommand}" CommandParameter="{Binding Catalog.SelectedServer}" />
+
+                                <Border Style="{StaticResource SectionSeparator}" Margin="8,7" />
+
+                                <TextBlock Text="Details" Style="{StaticResource FieldLabelText}" Margin="8,5,0,5" />
+                                <Grid Margin="8,0,8,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="86" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Endpoint" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Catalog.SelectedServer.Endpoint}" FontSize="10" />
+                                </Grid>
+                                <Grid Margin="8,0,8,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="86" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Username" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Catalog.SelectedServer.Profile.Username}" FontSize="10" />
+                                </Grid>
+                                <Grid Margin="8,0,8,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="86" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Authentication" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Catalog.SelectedServer.AuthenticationLabel}" FontSize="10" />
+                                </Grid>
+                                <Grid Margin="8,0,8,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="86" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="IIS readiness" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Catalog.SelectedServer.CapabilitySummary}" FontSize="10"
+                                               Foreground="{Binding Catalog.SelectedServer.IsManagementReady, Converter={StaticResource BooleanBrush}}" />
+                                </Grid>
+                                <TextBlock Text="Trusted SSH host key" Style="{StaticResource HelpText}" FontSize="10" Margin="8,3,8,2" />
+                                <TextBlock Text="{Binding Catalog.SelectedServer.FingerprintText}" FontFamily="Consolas" FontSize="9.5"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="8,0,8,5" />
+                                <TextBlock Text="{Binding Catalog.SelectedServer.Profile.Notes}" Style="{StaticResource HelpText}"
+                                           FontSize="10" TextWrapping="Wrap" Margin="8,3,8,0"
+                                           Visibility="{Binding Catalog.SelectedServer.Profile.Notes, Converter={StaticResource NullToVisibility}}" />
                             </StackPanel>
-                            <Button Grid.Column="2" Style="{StaticResource IconButton}" Content="&#xE70F;"
-                                    ToolTip="Edit server" Command="{Binding DataContext.EditServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}" />
-                        </Grid>
-
-                        <Border Margin="0,16,0,0" Background="{DynamicResource SurfaceAltBrush}" CornerRadius="8" Padding="12">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="9" Height="9" Fill="{Binding ConnectionState, Converter={StaticResource StateBrush}}"
-                                             VerticalAlignment="Center" Margin="0,0,8,0" />
-                                    <TextBlock Text="{Binding StatusMessage}" FontWeight="SemiBold"
-                                               Foreground="{Binding ConnectionState, Converter={StaticResource StateBrush}}" />
-                                    <TextBlock Text="{Binding LastConnectedText}" Style="{StaticResource HelpText}" Margin="12,1,0,0" />
-                                </StackPanel>
-                                <TextBlock Text="{Binding LastError}" Style="{StaticResource HelpText}" Margin="0,7,0,0"
-                                           Foreground="{DynamicResource DangerBrush}"
-                                           Visibility="{Binding LastError, Converter={StaticResource NullToVisibility}}" />
-                            </StackPanel>
-                        </Border>
-
-                        <TextBlock Text="Connection details" Style="{StaticResource SectionTitleText}" Margin="0,18,0,10" />
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="28" />
-                                <RowDefinition Height="28" />
-                                <RowDefinition Height="28" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="Username" Style="{StaticResource MutedText}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Profile.Username}" FontSize="12" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Grid.Row="1" Text="Authentication" Style="{StaticResource MutedText}" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AuthenticationLabel}" FontSize="12" />
-                            <TextBlock Grid.Row="2" Text="Websites" Style="{StaticResource MutedText}" />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding WebsiteSummary}" FontSize="12" />
-                            <TextBlock Grid.Row="3" Text="Host key" Style="{StaticResource MutedText}" Margin="0,5,0,0" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding FingerprintText}" FontFamily="Consolas" FontSize="11"
-                                       TextWrapping="Wrap" Margin="0,5,0,0" Foreground="{DynamicResource TextSecondaryBrush}" />
-                        </Grid>
-
-                        <Border Margin="0,16,0,0" Background="{DynamicResource SurfaceAltBrush}" CornerRadius="8" Padding="12">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" Foreground="{Binding IsManagementReady, Converter={StaticResource BooleanBrush}}"
-                                               FontSize="15" Margin="0,0,8,0" />
-                                    <TextBlock Text="Connection diagnostics" FontWeight="SemiBold" FontSize="13" />
-                                </StackPanel>
-                                <TextBlock Text="{Binding CapabilitySummary}" Style="{StaticResource MutedText}" Margin="0,6,0,0" />
-                                <Button Content="Run diagnostics" Style="{StaticResource LinkButton}" HorizontalAlignment="Left"
-                                        Margin="0,6,0,0" Command="{Binding DataContext.DiagnoseCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}" />
-                            </StackPanel>
-                        </Border>
-
-                        <TextBlock Text="{Binding Profile.Notes}" Style="{StaticResource MutedText}" Margin="0,12,0,0"
-                                   Visibility="{Binding Profile.Notes, Converter={StaticResource NullToVisibility}}" />
-
-                        <Border Style="{StaticResource SectionSeparator}" />
-
-                        <TextBlock Text="Actions" Style="{StaticResource SectionTitleText}" Margin="0,0,0,10" />
-                        <UniformGrid Columns="2">
-                            <Button Content="Connect" Style="{StaticResource PrimaryButton}" Margin="0,0,5,8"
-                                    Command="{Binding DataContext.ConnectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}"
-                                    Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}"
-                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
-                            <Button Content="Disconnect" Margin="0,0,5,8"
-                                    Command="{Binding DataContext.DisconnectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}"
-                                    Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibility}}" />
-                            <Button Content="Reconnect" Margin="0,0,5,8"
-                                    Command="{Binding DataContext.ReconnectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}" />
-                            <Button Content="Test connection" Margin="0,0,5,8"
-                                    Command="{Binding DataContext.TestConnectionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}" />
-                            <Button Content="Diagnostics" Margin="0,0,5,0"
-                                    Command="{Binding DataContext.DiagnoseCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}" />
-                            <Button Content="Forget host key" Margin="0,0,5,0"
-                                    Command="{Binding DataContext.ForgetHostKeyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}"
-                                    Visibility="{Binding HasTrustedHostKey, Converter={StaticResource BoolToVisibility}}" />
-                        </UniformGrid>
-                        <Button Content="Cancel current operation" Style="{StaticResource SubtleButton}" Margin="0,10,0,0"
-                                Command="{Binding DataContext.CancelOperationCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}"
-                                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
-                        <Button Content="Delete server profile" Style="{StaticResource DangerButton}" Margin="0,14,0,0"
-                                Command="{Binding DataContext.DeleteServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}" />
-                    </StackPanel>
-                </ScrollViewer>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
             </Border>
         </Grid>
     </Grid>

@@ -189,7 +189,12 @@ Write-WsmSuccess $result
             throw new ValidationException(validation.Errors);
         }
 
-        if (!WebsitePathSafety.BuildPhysicalPath(request.IisRoot, request.FolderName, out _, out var pathError))
+        if (!WebsitePathSafety.ResolvePhysicalPath(
+                request.IisRoot,
+                request.PhysicalPath,
+                request.FolderName,
+                out _,
+                out var pathError))
         {
             throw new ValidationException(pathError);
         }
@@ -208,6 +213,7 @@ Write-WsmSuccess $result
         var body = $$"""
 $siteName = {{PowerShellLiterals.Quote(siteName)}}
 $folderName = {{PowerShellLiterals.Quote(folderName)}}
+$physicalPathInput = {{PowerShellLiterals.Quote(request.PhysicalPath.Trim())}}
 $rootPath = {{PowerShellLiterals.Quote(request.IisRoot.Trim())}}
 $port = {{request.Port}}
 $hostName = {{PowerShellLiterals.Quote(hostName)}}
@@ -216,6 +222,7 @@ $thumbprint = {{PowerShellLiterals.Quote(thumbprint)}}
 $appPoolName = {{PowerShellLiterals.Quote(applicationPool)}}
 $runtimeVersion = {{PowerShellLiterals.Quote(runtimeVersion)}}
 $pipelineMode = {{PowerShellLiterals.Quote(pipelineMode)}}
+$startAppPool = {{PowerShellLiterals.Boolean(request.StartApplicationPoolImmediately)}}
 $useExistingFolder = {{PowerShellLiterals.Boolean(request.UseExistingFolder)}}
 $startImmediately = {{PowerShellLiterals.Boolean(request.StartImmediately)}}
 
@@ -264,19 +271,28 @@ if (-not (Test-Path -LiteralPath $rootFull -PathType Container)) {
     throw "IIS root '$rootFull' does not exist on the remote server."
 }
 
-$invalidChars = [IO.Path]::GetInvalidFileNameChars()
-if ([string]::IsNullOrWhiteSpace($folderName) -or
-    $folderName -eq '.' -or
-    $folderName -eq '..' -or
-    $folderName.Contains('\') -or
-    $folderName.Contains('/') -or
-    $folderName.IndexOfAny($invalidChars) -ge 0) {
-    throw "Physical folder name '$folderName' is not valid."
+if (-not [string]::IsNullOrWhiteSpace($physicalPathInput)) {
+    if (-not [IO.Path]::IsPathRooted($physicalPathInput)) {
+        throw "Physical path '$physicalPathInput' must be an absolute path."
+    }
+
+    $physicalPath = [IO.Path]::GetFullPath($physicalPathInput).TrimEnd('\')
+} else {
+    $invalidChars = [IO.Path]::GetInvalidFileNameChars()
+    if ([string]::IsNullOrWhiteSpace($folderName) -or
+        $folderName -eq '.' -or
+        $folderName -eq '..' -or
+        $folderName.Contains('\') -or
+        $folderName.Contains('/') -or
+        $folderName.IndexOfAny($invalidChars) -ge 0) {
+        throw "Physical folder name '$folderName' is not valid."
+    }
+
+    $physicalPath = [IO.Path]::GetFullPath([IO.Path]::Combine($rootFull, $folderName)).TrimEnd('\')
 }
 
-$physicalPath = [IO.Path]::GetFullPath([IO.Path]::Combine($rootFull, $folderName))
 $rootPrefix = $rootFull + '\'
-if (-not $physicalPath.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+if ($physicalPath -eq $rootFull -or -not $physicalPath.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
     throw "The resolved physical folder '$physicalPath' is outside the configured IIS root."
 }
 
@@ -298,6 +314,7 @@ $folderCreated = $false
 $appPoolCreated = $false
 $siteCreated = $false
 
+try {
 if (Test-Path -LiteralPath $physicalPath) {
     if (-not (Test-Path -LiteralPath $physicalPath -PathType Container)) {
         throw "The path '$physicalPath' exists but is not a folder."
@@ -316,11 +333,17 @@ if (-not (Test-Path -LiteralPath "IIS:\AppPools\$appPoolName")) {
     $appPoolCreated = $true
     Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name managedRuntimeVersion -Value $runtimeVersion
     Set-ItemProperty -Path "IIS:\AppPools\$appPoolName" -Name managedPipelineMode -Value $pipelineMode
+
+    $poolState = [string](Get-WebAppPoolState -Name $appPoolName).Value
+    if ($startAppPool -and $poolState -ne 'Started') {
+        Start-WebAppPool -Name $appPoolName | Out-Null
+    } elseif (-not $startAppPool -and $poolState -ne 'Stopped') {
+        Stop-WebAppPool -Name $appPoolName | Out-Null
+    }
 } else {
     $warnings += "Application pool '$appPoolName' already existed and was reused without changing its settings."
 }
 
-try {
     $siteParameters = @{
         Name = $siteName
         PhysicalPath = $physicalPath

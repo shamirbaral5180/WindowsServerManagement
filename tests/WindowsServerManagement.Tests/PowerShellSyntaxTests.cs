@@ -29,6 +29,7 @@ public sealed class PowerShellSyntaxTests
                 {
                     Name = "MyPortfolio",
                     FolderName = "MyPortfolio",
+                    PhysicalPath = @"C:\inetpub\MyPortfolio",
                     Port = 50082,
                     ApplicationPoolName = "MyPortfolio",
                     IisRoot = @"C:\inetpub"

@@ -90,6 +90,48 @@ public static class WebsitePathSafety
         }
     }
 
+    public static bool ResolvePhysicalPath(string root, string? physicalPathInput, string? folderName, out string physicalPath, out string error)
+    {
+        physicalPath = string.Empty;
+        error = string.Empty;
+
+        if (!IsValidRoot(root, out error))
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(physicalPathInput))
+        {
+            var candidate = physicalPathInput.Trim();
+            if (!IsAbsoluteWindowsPath(candidate))
+            {
+                error = @"Physical path must be an absolute Windows path such as C:\inetpub\MyPortfolio.";
+                return false;
+            }
+
+            try
+            {
+                var rootFull = Path.GetFullPath(root.Trim()).TrimEnd('\\');
+                var fullPath = Path.GetFullPath(candidate).TrimEnd('\\');
+                if (!fullPath.StartsWith(rootFull + "\\", StringComparison.OrdinalIgnoreCase))
+                {
+                    error = $"Physical path must be inside the configured IIS root '{rootFull}'.";
+                    return false;
+                }
+
+                physicalPath = fullPath;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                error = $"Physical path is not valid: {exception.Message}";
+                return false;
+            }
+        }
+
+        return BuildPhysicalPath(root, folderName ?? string.Empty, out physicalPath, out error);
+    }
+
     public static bool BuildPhysicalPath(string root, string folderName, out string physicalPath, out string error)
     {
         physicalPath = string.Empty;

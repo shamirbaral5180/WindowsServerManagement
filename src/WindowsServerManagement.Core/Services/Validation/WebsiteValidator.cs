@@ -19,7 +19,10 @@ public static partial class WebsiteValidator
 
         ValidateSiteName(request.Name, result);
         ValidateApplicationPoolName(request.ApplicationPoolName, result);
-        ValidateFolderName(request.FolderName, result);
+        if (string.IsNullOrWhiteSpace(request.PhysicalPath))
+        {
+            ValidateFolderName(request.FolderName, result);
+        }
 
         if (request.Port is < 1 or > 65535)
         {
@@ -60,7 +63,12 @@ public static partial class WebsiteValidator
 
         if (result.IsValid)
         {
-            var pathResult = WebsitePathSafety.BuildPhysicalPath(root, request.FolderName, out _, out var pathError);
+            var pathResult = WebsitePathSafety.ResolvePhysicalPath(
+                root,
+                request.PhysicalPath,
+                request.FolderName,
+                out _,
+                out var pathError);
             if (!pathResult)
             {
                 result.Errors.Add(pathError);

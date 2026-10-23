@@ -183,6 +183,40 @@ public sealed class ValidationTests
     }
 
     [Fact]
+    public void WebsiteValidation_AcceptsExplicitPathInsideRoot()
+    {
+        var request = new WebsiteCreateRequest
+        {
+            Name = "Site",
+            PhysicalPath = @"C:\inetpub\CustomSite",
+            Port = 8080,
+            ApplicationPoolName = "Site",
+            IisRoot = @"C:\inetpub"
+        };
+
+        var result = WebsiteValidator.ValidateCreateRequest(request);
+
+        Assert.True(result.IsValid, result.ErrorText);
+    }
+
+    [Fact]
+    public void WebsiteValidation_RejectsExplicitPathOutsideRoot()
+    {
+        var request = new WebsiteCreateRequest
+        {
+            Name = "Site",
+            PhysicalPath = @"C:\Windows\CustomSite",
+            Port = 8080,
+            ApplicationPoolName = "Site",
+            IisRoot = @"C:\inetpub"
+        };
+
+        var result = WebsiteValidator.ValidateCreateRequest(request);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
     public void BindingBuilder_CreatesWildcardBinding()
     {
         Assert.Equal("*:50082:", IisBindingBuilder.BuildBindingInformation(null, 50082));

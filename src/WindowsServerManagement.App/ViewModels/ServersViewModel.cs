@@ -19,6 +19,18 @@ public sealed partial class ServersViewModel : ObservableObject
         _catalog = catalog;
         _dialogs = dialogs;
         _logger = logger;
+        _catalog.Servers.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(HasServers));
+            OnPropertyChanged(nameof(HasNoServers));
+        };
+        _catalog.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(ServerCatalog.SelectedServer))
+            {
+                OnPropertyChanged(nameof(HasSelectedServer));
+            }
+        };
     }
 
     public ServerCatalog Catalog => _catalog;
@@ -26,6 +38,7 @@ public sealed partial class ServersViewModel : ObservableObject
 
     public bool HasServers => Servers.Count > 0;
     public bool HasNoServers => Servers.Count == 0;
+    public bool HasSelectedServer => SelectedServer is not null;
 
     public ServerItemViewModel? SelectedServer
     {

@@ -11,7 +11,7 @@
         <conv:BooleanToBrushConverter x:Key="BooleanBrush" />
     </UserControl.Resources>
 
-    <Grid Margin="30,24,30,28">
+    <Grid Margin="20,14,20,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -21,46 +21,54 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <StackPanel>
                 <TextBlock Text="IIS Websites" Style="{StaticResource PageTitleText}" />
-                <TextBlock Text="Create and manage websites on the selected remote Windows Server."
-                           Style="{StaticResource PageSubtitleText}" />
+                <TextBlock Text="Create and manage sites on the selected remote server." Style="{StaticResource PageSubtitleText}" />
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button Content="Connect" Command="{Binding ConnectServerCommand}" Margin="0,0,10,0"
+            <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom" Margin="0,0,2,1" MaxWidth="480" TextTrimming="CharacterEllipsis" />
+        </Grid>
+
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
+                BorderThickness="1" CornerRadius="2" Padding="8,5" Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Server:" Style="{StaticResource HelpText}" VerticalAlignment="Center" Margin="2,0,6,0" />
+                <ComboBox Grid.Column="1" Width="220" ItemsSource="{Binding Servers}" SelectedItem="{Binding SelectedServer, Mode=TwoWay}"
+                          DisplayMemberPath="Name" Height="28" MinHeight="28" />
+                <Button Grid.Column="2" Content="Connect" Command="{Binding ConnectServerCommand}" Margin="10,0,0,0"
+                        Height="28" MinHeight="28" Padding="10,0"
                         Visibility="{Binding IsServerConnected, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
-                <Button Content="+  Create website" Style="{StaticResource PrimaryButton}" Command="{Binding CreateWebsiteCommand}" />
-            </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="1" Margin="0,18,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid MaxWidth="460" HorizontalAlignment="Left">
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" MinHeight="38" Padding="34,7,10,7" />
-                <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{DynamicResource TextTertiaryBrush}"
-                           VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False" />
-                <TextBlock Text="Search websites..." Foreground="{DynamicResource TextTertiaryBrush}"
-                           VerticalAlignment="Center" Margin="34,0,0,0" IsHitTestVisible="False"
-                           Visibility="{Binding SearchText, Converter={StaticResource StringToVisibility}, ConverterParameter=Invert}" />
+                <Grid Grid.Column="3" Margin="4,0,0,0">
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="28" MinHeight="28" Padding="26,4,8,4" />
+                    <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
+                               VerticalAlignment="Center" Margin="9,0,0,0" IsHitTestVisible="False" />
+                    <TextBlock Text="Search websites..." Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11"
+                               VerticalAlignment="Center" Margin="27,0,0,0" IsHitTestVisible="False"
+                               Visibility="{Binding SearchText, Converter={StaticResource StringToVisibility}, ConverterParameter=Invert}" />
+                </Grid>
+                <TextBlock Grid.Column="4" Text="{Binding FilteredCountText}" Style="{StaticResource HelpText}"
+                           VerticalAlignment="Center" Margin="12,0,8,0" />
+                <StackPanel Grid.Column="5" Orientation="Horizontal">
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}" Height="28" MinHeight="28" Padding="10,0" />
+                    <Button Content="Create Website" Style="{StaticResource PrimaryButton}" Command="{Binding CreateWebsiteCommand}"
+                            Margin="6,0,0,0" Height="28" MinHeight="28" Padding="10,0" />
+                    <Button Content="Delete Site" Style="{StaticResource DangerButton}" Command="{Binding DeleteWebsiteCommand}"
+                            IsEnabled="{Binding HasSelectedWebsite}" Margin="6,0,0,0" Height="28" MinHeight="28" Padding="10,0" />
+                </StackPanel>
             </Grid>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="{Binding FilteredCountText}" Style="{StaticResource MutedText}" VerticalAlignment="Center" Margin="0,0,12,0" />
-                <Button Content="Refresh" Command="{Binding RefreshCommand}" Margin="0,0,8,0" />
-                <Button Content="Cancel" Command="{Binding CancelOperationCommand}" Style="{StaticResource SubtleButton}"
-                        Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
-            </StackPanel>
-        </Grid>
+        </Border>
 
-        <StackPanel Grid.Row="2" Margin="0,12,0,0">
+        <StackPanel Grid.Row="2" Margin="0,8,0,0">
             <Border Background="{DynamicResource DangerSoftBrush}" BorderBrush="{DynamicResource DangerBorderBrush}"
-                    BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,0,0,8"
+                    BorderThickness="1" CornerRadius="2" Padding="10,7" Margin="0,0,0,6"
                     Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibility}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -69,15 +77,15 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="&#xE783;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource DangerBrush}"
-                               FontSize="14" VerticalAlignment="Top" Margin="0,1,8,0" />
+                               FontSize="12" VerticalAlignment="Top" Margin="0,1,7,0" />
                     <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource DangerBrush}"
-                               TextWrapping="Wrap" />
+                               TextWrapping="Wrap" FontSize="11" />
                     <Button Grid.Column="2" Content="&#xE711;" Style="{StaticResource IconButton}" Command="{Binding ClearNotificationsCommand}"
-                            Width="24" Height="24" MinHeight="24" />
+                            Width="22" Height="22" MinHeight="22" />
                 </Grid>
             </Border>
             <Border Background="{DynamicResource SuccessSoftBrush}" BorderBrush="{DynamicResource SuccessBorderBrush}"
-                    BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,0,0,8"
+                    BorderThickness="1" CornerRadius="2" Padding="10,7" Margin="0,0,0,6"
                     Visibility="{Binding SuccessMessage, Converter={StaticResource StringToVisibility}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -86,142 +94,161 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource SuccessBrush}"
-                               FontSize="14" VerticalAlignment="Top" Margin="0,1,8,0" />
+                               FontSize="12" VerticalAlignment="Top" Margin="0,1,7,0" />
                     <TextBlock Grid.Column="1" Text="{Binding SuccessMessage}" Foreground="{DynamicResource SuccessBrush}"
-                               TextWrapping="Wrap" />
+                               TextWrapping="Wrap" FontSize="11" />
                     <Button Grid.Column="2" Content="&#xE711;" Style="{StaticResource IconButton}" Command="{Binding ClearNotificationsCommand}"
-                            Width="24" Height="24" MinHeight="24" />
+                            Width="22" Height="22" MinHeight="22" />
                 </Grid>
             </Border>
         </StackPanel>
 
-        <Grid Grid.Row="3" Margin="0,4,0,0">
+        <Grid Grid.Row="3" Margin="0,6,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="390" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <Border Style="{StaticResource Card}" Padding="0">
+            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1" CornerRadius="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ProgressBar IsIndeterminate="True" Height="3" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+                    <ProgressBar IsIndeterminate="True" Height="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
                     <DataGrid Grid.Row="1" ItemsSource="{Binding WebsitesView}" SelectedItem="{Binding SelectedWebsite, Mode=TwoWay}"
-                              Margin="0,2,0,0">
+                              Margin="0,1,0,0" RowHeight="34" ColumnHeaderHeight="31">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Website" Binding="{Binding Name}" Width="1.3*" />
-                            <DataGridTextColumn Header="State" Binding="{Binding State}" Width="80" />
-                            <DataGridTextColumn Header="Server" Binding="{Binding ServerName}" Width="130" />
+                            <DataGridTextColumn Header="Site" Binding="{Binding Name}" Width="1.3*" />
+                            <DataGridTextColumn Header="Status" Binding="{Binding State}" Width="76" />
                             <DataGridTextColumn Header="Binding" Binding="{Binding BindingsSummary}" Width="1.4*" />
-                            <DataGridTextColumn Header="Application pool" Binding="{Binding ApplicationPool}" Width="1.2*" />
+                            <DataGridTextColumn Header="Physical Path" Binding="{Binding PhysicalPath}" Width="2*" />
+                            <DataGridTextColumn Header="Application Pool" Binding="{Binding ApplicationPool}" Width="1.1*" />
+                            <DataGridTextColumn Header="Server" Binding="{Binding ServerName}" Width="95" />
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Grid Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}"
+                    <Grid Grid.Row="1" Background="{DynamicResource SurfaceBrush}"
                           Visibility="{Binding HasVisibleWebsites, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}"
                           IsHitTestVisible="False">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
-                            <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="30"
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="420">
+                            <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="28"
                                        Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding EmptyMessage}" Style="{StaticResource MutedText}" TextAlignment="Center"
-                                       FontSize="13" Margin="0,12,0,0" />
+                                       FontSize="12" Margin="0,10,0,0" />
                         </StackPanel>
                     </Grid>
                 </Grid>
             </Border>
 
-            <Border Grid.Column="2" Style="{StaticResource Card}" Padding="20">
+            <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1" CornerRadius="2">
                 <Grid>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Visibility="{Binding HasSelectedWebsite, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}">
-                        <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="30"
-                                   Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" />
-                        <TextBlock Text="Select a website" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,12,0,0" />
-                        <TextBlock Text="Details and actions appear here." Style="{StaticResource MutedText}" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                    </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource DividerBrush}"
+                            BorderThickness="0,0,0,1" Padding="12,9">
+                        <StackPanel>
+                            <TextBlock Text="Actions" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding SelectedWebsite.Name}" Style="{StaticResource HelpText}" FontSize="11"
+                                       TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                  Visibility="{Binding HasSelectedWebsite, Converter={StaticResource BoolToVisibility}}">
-                        <StackPanel DataContext="{Binding SelectedWebsite}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" />
-                                    <TextBlock Text="{Binding ServerName}" Style="{StaticResource MutedText}" Margin="0,3,0,0" />
-                                </StackPanel>
-                                <Border Grid.Column="1" Style="{StaticResource StatusPill}"
-                                        Background="{DynamicResource SurfaceAltBrush}" VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding State}" FontSize="11" FontWeight="SemiBold"
-                                               Foreground="{Binding IsRunning, Converter={StaticResource BooleanBrush}}" />
-                                </Border>
-                            </Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="6,6,6,10">
+                            <TextBlock Text="Website" Style="{StaticResource FieldLabelText}" Margin="8,5,0,3" />
+                            <Button Content="Start" Style="{StaticResource ActionLinkButton}" Command="{Binding StartWebsiteCommand}"
+                                    IsEnabled="{Binding HasSelectedWebsite}"
+                                    Visibility="{Binding SelectedWebsite.IsRunning, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
+                            <Button Content="Stop" Style="{StaticResource ActionLinkButton}" Command="{Binding StopWebsiteCommand}"
+                                    IsEnabled="{Binding HasSelectedWebsite}"
+                                    Visibility="{Binding SelectedWebsite.IsRunning, Converter={StaticResource BoolToVisibility}}" />
+                            <Button Content="Restart" Style="{StaticResource ActionLinkButton}" Command="{Binding RestartWebsiteCommand}"
+                                    IsEnabled="{Binding HasSelectedWebsite}"
+                                    Visibility="{Binding SelectedWebsite.IsRunning, Converter={StaticResource BoolToVisibility}}" />
+                            <Button Content="Open in Browser" Style="{StaticResource ActionLinkButton}"
+                                    Command="{Binding OpenInBrowserCommand}" IsEnabled="{Binding HasSelectedWebsite}" />
+                            <Button Content="Edit Bindings" Style="{StaticResource ActionLinkButton}"
+                                    Command="{Binding EditBindingsCommand}" IsEnabled="{Binding HasSelectedWebsite}" />
+                            <Button Content="View Configuration" Style="{StaticResource ActionLinkButton}"
+                                    Command="{Binding ViewDetailsCommand}" IsEnabled="{Binding HasSelectedWebsite}" />
+                            <Button Content="Delete Website" Style="{StaticResource DangerActionLinkButton}"
+                                    Command="{Binding DeleteWebsiteCommand}" IsEnabled="{Binding HasSelectedWebsite}" />
 
-                            <Border Style="{StaticResource SectionSeparator}" />
+                            <Border Style="{StaticResource SectionSeparator}" Margin="8,7" />
 
-                            <TextBlock Text="Physical path" Style="{StaticResource FieldLabelText}" />
-                            <TextBlock Text="{Binding PhysicalPath}" FontFamily="Consolas" FontSize="12" TextWrapping="Wrap"
-                                       Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="Website List" Style="{StaticResource FieldLabelText}" Margin="8,5,0,3" />
+                            <Button Content="Refresh" Style="{StaticResource ActionLinkButton}" Command="{Binding RefreshCommand}" />
+                            <Button Content="Create Website" Style="{StaticResource ActionLinkButton}" Command="{Binding CreateWebsiteCommand}" />
+                            <Button Content="Cancel Current Operation" Style="{StaticResource ActionLinkButton}"
+                                    Command="{Binding CancelOperationCommand}"
+                                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
 
-                            <TextBlock Text="Application pool" Style="{StaticResource FieldLabelText}" Margin="0,14,0,6" />
-                            <TextBlock Text="{Binding ApplicationPool}" FontSize="12" />
+                            <Border Style="{StaticResource SectionSeparator}" Margin="8,7" />
 
-                            <TextBlock Text="Bindings" Style="{StaticResource FieldLabelText}" Margin="0,14,0,6" />
-                            <ItemsControl ItemsSource="{Binding Bindings}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Background="{DynamicResource SurfaceAltBrush}" CornerRadius="6" Padding="9,6" Margin="0,0,0,5">
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Display}" FontSize="12" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding BindingInformation}" FontFamily="Consolas" FontSize="10"
-                                                           Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" />
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                            <Border Style="{StaticResource SectionSeparator}" />
-
-                            <TextBlock Text="Actions" Style="{StaticResource SectionTitleText}" Margin="0,0,0,10" />
-                            <UniformGrid Columns="2">
-                                <Button Content="Start" Style="{StaticResource PrimaryButton}" Margin="0,0,5,8"
-                                        Command="{Binding DataContext.StartWebsiteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
-                                <Button Content="Stop" Margin="0,0,5,8"
-                                        Command="{Binding DataContext.StopWebsiteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
-                                <Button Content="Restart" Margin="0,0,5,8"
-                                        Command="{Binding DataContext.RestartWebsiteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
-                                <Button Content="Open in browser" Margin="0,0,5,8"
-                                        Command="{Binding DataContext.OpenInBrowserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                                <Button Content="Edit bindings" Margin="0,0,5,0"
-                                        Command="{Binding DataContext.EditBindingsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                                <Button Content="Configuration" Margin="0,0,5,0"
-                                        Command="{Binding DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                            </UniformGrid>
-                            <Button Content="Delete website" Style="{StaticResource DangerButton}" Margin="0,12,0,0"
-                                    Command="{Binding DataContext.DeleteWebsiteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                            <TextBlock Text="Details" Style="{StaticResource FieldLabelText}" Margin="8,5,0,5" />
+                            <StackPanel Visibility="{Binding HasSelectedWebsite, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="8,0,8,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Server" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedWebsite.ServerName}" FontSize="10"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                                <Grid Margin="8,0,8,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="State" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedWebsite.State}" FontSize="10" />
+                                </Grid>
+                                <Grid Margin="8,0,8,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="App pool" Style="{StaticResource HelpText}" FontSize="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedWebsite.ApplicationPool}" FontSize="10"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                                <TextBlock Text="Physical path" Style="{StaticResource HelpText}" FontSize="10" Margin="8,2,8,2" />
+                                <TextBlock Text="{Binding SelectedWebsite.PhysicalPath}" FontFamily="Consolas" FontSize="10"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="8,0,8,6" />
+                                <TextBlock Text="Bindings" Style="{StaticResource HelpText}" FontSize="10" Margin="8,2,8,3" />
+                                <ItemsControl ItemsSource="{Binding SelectedWebsite.Bindings}" Margin="8,0,8,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Display}" FontSize="10" Margin="0,1,0,2"
+                                                       Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                            <TextBlock Text="Select a website to view actions and details." Style="{StaticResource HelpText}"
+                                       Margin="8,2,8,0"
+                                       Visibility="{Binding HasSelectedWebsite, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid Grid.Row="4" Margin="0,12,0,0">
-            <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" VerticalAlignment="Center" />
+        <Grid Grid.Row="4" Margin="0,8,0,0">
+            <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" FontSize="10" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Ellipse Width="7" Height="7" Fill="{Binding SelectedServer.ConnectionState, Converter={StaticResource StateBrush}}"
-                         VerticalAlignment="Center" Margin="0,0,6,0" />
-                <TextBlock Text="{Binding ServerName}" Style="{StaticResource HelpText}" />
-                <TextBlock Text="  ·  " Style="{StaticResource HelpText}" />
-                <TextBlock Text="{Binding ServerEndpoint}" Style="{StaticResource HelpText}" />
+                <Ellipse Width="6" Height="6" Fill="{Binding SelectedServer.ConnectionState, Converter={StaticResource StateBrush}}"
+                         VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding ServerName}" Style="{StaticResource HelpText}" FontSize="10" />
+                <TextBlock Text="  |  " Style="{StaticResource HelpText}" FontSize="10" />
+                <TextBlock Text="{Binding ServerEndpoint}" Style="{StaticResource HelpText}" FontSize="10" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -9,7 +9,7 @@
         <conv:ActivityStatusToBackgroundConverter x:Key="StatusBackground" />
     </UserControl.Resources>
 
-    <Grid Margin="30,24,30,28">
+    <Grid Margin="20,14,20,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
